@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
     
@@ -22,6 +23,7 @@ class LoginViewController: UIViewController {
     let nameTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "姓名"
+        textField.clearButtonMode = .whileEditing
         return textField
     }()
     let nameTextFieldSeprator: UIView = {
@@ -33,6 +35,7 @@ class LoginViewController: UIViewController {
     let emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "邮件"
+        textField.clearButtonMode = .whileEditing
         return textField
     }()
     let emailTextFieldSeprator: UIView = {
@@ -44,6 +47,7 @@ class LoginViewController: UIViewController {
     let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "密码"
+        textField.clearButtonMode = .whileEditing
         return textField
     }()
     
@@ -53,8 +57,31 @@ class LoginViewController: UIViewController {
         button.setTitle("注册", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor(rgb: 0x516599)
+        button.addTarget(self, action: #selector(loginOrRegisterClicked), for: .touchUpInside)
         return button
     }()
+    
+    @objc func loginOrRegisterClicked() {
+        
+        guard let username = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else {
+            print("the form content format is not valid!")
+            return
+        }
+        
+        // create user with email and password
+        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+            
+            if let err = error {
+                print("There is a error creating new user: \(err)")
+                return
+            }
+            
+            if let user = user {
+                print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
+            }
+            
+        }
+    }
     
     // logo image
     let loginLogo: UIImageView = {
