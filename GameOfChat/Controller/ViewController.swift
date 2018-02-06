@@ -8,11 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // add a logout bar buttom item
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "注销登录", style: .plain, target: self, action: #selector(logout))
+    }
+    
+    @objc func logout() {
+        let loginVC = LoginViewController()
+        present(loginVC, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
