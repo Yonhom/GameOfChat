@@ -14,21 +14,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    /**
+     * global firestore database
+     */
+    static var db = Firestore.firestore()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
         
-        
         window = UIWindow()
         window?.makeKeyAndVisible()
         
-        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        window?.rootViewController = UINavigationController(rootViewController: MessageViewController())
         
         
         return true
     }
-
 
 
 }

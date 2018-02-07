@@ -116,9 +116,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    // fire store for store app data, better than realtime db
-    let db = Firestore.firestore()
-    
     @objc func loginOrRegisterClicked() {
         if loginRegisterSegment.selectedSegmentIndex == 0 {
             login()
@@ -165,7 +162,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 
                 // save user info to firebase firestore
                 var ref: DocumentReference? = nil
-                ref = self.db.collection("users").addDocument(data:[
+                ref = AppDelegate.db.collection("users").addDocument(data:[
                     "name" : username,
                     "email":email
                 ]) { err in

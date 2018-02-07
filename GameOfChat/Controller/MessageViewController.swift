@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ViewController: UITableViewController {
+class MessageViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,10 +17,19 @@ class ViewController: UITableViewController {
         // add a logout bar buttom item
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "注销登录", style: .plain, target: self, action: #selector(logout))
         
+        // add a 'fire up a chat' icon item
+        let composeImage = UIImage(named: "new_message_icon")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: composeImage, style: .plain, target: self, action: #selector(openComposeMessagePage))
+        
         // to see if there is a current user. if not jump to login page
         if Auth.auth().currentUser == nil {
             logout()
         }
+    }
+    
+    @objc func openComposeMessagePage() {
+        let composeNavi = UINavigationController(rootViewController: UserListController())
+        present(composeNavi, animated: true, completion: nil)
     }
     
     @objc func logout() {
