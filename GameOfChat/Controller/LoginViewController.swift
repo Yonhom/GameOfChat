@@ -81,6 +81,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @objc func loginRegisterSegmentToggled() {
         print("\(loginRegisterSegment.titleForSegment(at: loginRegisterSegment.selectedSegmentIndex)!) selected!")
         
+        // button title
+        loginOrRegisterBtn.setTitle(loginRegisterSegment.titleForSegment(at: loginRegisterSegment.selectedSegmentIndex), for: .normal)
+        
         // dynamic container height
         let inputContainterHeight = self.loginRegisterSegment.selectedSegmentIndex == 0 ? 100.0 : 150.0
         self.inputContainerViewHeightConstraint?.constant = CGFloat(inputContainterHeight)
@@ -117,13 +120,39 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     let db = Firestore.firestore()
     
     @objc func loginOrRegisterClicked() {
+        if loginRegisterSegment.selectedSegmentIndex == 0 {
+            login()
+        } else {
+            register()
+        }
         
+    }
+    
+    func login() {
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            print("the form content format is not valid!")
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            if error != nil {
+                print("There is a error signing in: \(error!)")
+                return
+            }
+            
+            // successfully signed in!
+            print("SIgned in with email: \(user?.email)")
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func register() {
         guard let username = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else {
             print("the form content format is not valid!")
             return
         }
         
-        // create user with email and password
+        // create user with email and password, if successfully, the user is automatically signed in
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
             
             if let err = error {
@@ -142,8 +171,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 ]) { err in
                     if err != nil {
                         print("Error adding document: \(err)")
+                        // removing (and signing out the current user if there is one) the user added to auth
+                        user.delete(completion: { (error) in
+                            print("Error deleting the ill-registered user: \(error)")
+                        })
                     } else {
                         print("Document added with ID: \(ref!.documentID)")
+                        // jump to main page
+                        self.dismiss(animated: true, completion: nil)
                     }
                 }
                 
