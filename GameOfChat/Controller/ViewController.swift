@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ViewController: UITableViewController {
 
@@ -15,18 +16,25 @@ class ViewController: UITableViewController {
         
         // add a logout bar buttom item
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "注销登录", style: .plain, target: self, action: #selector(logout))
+        
+        // to see if there is a current user. if not jump to login page
+        if Auth.auth().currentUser == nil {
+            logout()
+        }
     }
     
     @objc func logout() {
+        if Auth.auth().currentUser != nil {
+            do {
+                try Auth.auth().signOut()
+            } catch let error {
+                print("There is a error logging out: \(error)")
+            }
+        }
+        
         let loginVC = LoginViewController()
         present(loginVC, animated: true, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
