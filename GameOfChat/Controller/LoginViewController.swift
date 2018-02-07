@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // property initialized with a anonymous closure
     let inputContainerView: UIView = {
@@ -51,6 +51,11 @@ class LoginViewController: UIViewController {
         return textField
     }()
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
     // register button
     let loginOrRegisterBtn: UIButton = {
         let button = UIButton()
@@ -60,6 +65,18 @@ class LoginViewController: UIViewController {
         button.addTarget(self, action: #selector(loginOrRegisterClicked), for: .touchUpInside)
         return button
     }()
+    
+    // login/register segment
+    let loginRegisterSegment: UISegmentedControl = {
+        let loginRegisterSegment = UISegmentedControl(items: ["登录", "注册"]);
+        loginRegisterSegment.tintColor = UIColor.white
+        loginRegisterSegment.selectedSegmentIndex = 1
+        loginRegisterSegment.translatesAutoresizingMaskIntoConstraints = false
+        return loginRegisterSegment
+    }()
+    
+    // fire store for store app data, better than realtime db
+    let db = Firestore.firestore()
     
     @objc func loginOrRegisterClicked() {
         
@@ -78,6 +95,20 @@ class LoginViewController: UIViewController {
             
             if let user = user {
                 print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
+                
+                // save user info to firebase firestore
+                var ref: DocumentReference? = nil
+                ref = self.db.collection("users").addDocument(data:[
+                    "name" : username,
+                    "email":email
+                ]) { err in
+                    if err != nil {
+                        print("Error adding document: \(err)")
+                    } else {
+                        print("Document added with ID: \(ref!.documentID)")
+                    }
+                }
+                
             }
             
         }
@@ -104,15 +135,28 @@ class LoginViewController: UIViewController {
         loginOrRegisterBtn.translatesAutoresizingMaskIntoConstraints = false
         setupLoginOrRegisterBtn()
         
+        // add the segment
+        view.addSubview(loginRegisterSegment)
+        setupRegisterLoginSegment()
+        
         // add the logo
         view.addSubview(loginLogo)
         loginLogo.translatesAutoresizingMaskIntoConstraints = false
         setupLoginLogo()
+        
+        
+    }
+    
+    func setupRegisterLoginSegment() {
+        loginRegisterSegment.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterSegment.bottomAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: -12).isActive = true
+        loginRegisterSegment.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
+        loginRegisterSegment.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     func setupLoginLogo() {
         loginLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginLogo.bottomAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: -60).isActive = true
+        loginLogo.bottomAnchor.constraint(equalTo: loginRegisterSegment.topAnchor, constant: -60).isActive = true
         loginLogo.widthAnchor.constraint(equalToConstant: 150).isActive = true
         loginLogo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
@@ -169,6 +213,9 @@ class LoginViewController: UIViewController {
         passwordTextField.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor, constant: -24).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3).isActive = true
         
+        nameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
     }
 
 }
