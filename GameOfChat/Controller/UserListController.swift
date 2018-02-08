@@ -19,6 +19,9 @@ class UserListController: UITableViewController {
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismissSelf))
         
+        // register custom usercell
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
         fetchUser()
 
     }
@@ -55,16 +58,25 @@ class UserListController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell = tableView.dequeueReusableCell(withIdentifier: cellId)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
+        cell.textLabel?.text = users[indexPath.row].name
+        cell.detailTextLabel?.text = users[indexPath.row].email
+        
+        // profile image
+        if let imageUrlStr = users[indexPath.row].profileUrl {
+            // load image using imageview custom extension with a cache image capability, habahaba!!!
+            cell.profileImageView.loadCachedImageWithUrl(imageUrlStr: imageUrlStr)
+
+        } else { // if the user dont have a profile image url, set its image to nil to present image mis-reuse
+            cell.profileImageView.image = nil
         }
         
-        cell?.textLabel?.text = users[indexPath.row].name
-        cell?.detailTextLabel?.text = users[indexPath.row].email
-        
-        return cell!
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 
 }
