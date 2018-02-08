@@ -110,30 +110,46 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             
-            if let user = user {
-                print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
-                
-                // save user info to firebase firestore
-                var ref: DocumentReference? = nil
-                ref = AppDelegate.db.collection("users").addDocument(data:[
-                    "name" : username,
-                    "email":email
-                ]) { err in
-                    if err != nil {
-                        print("Error adding document: \(err)")
-                        // removing (and signing out the current user if there is one) the user added to auth
-                        user.delete(completion: { (error) in
-                            print("Error deleting the ill-registered user: \(error)")
-                        })
-                    } else {
-                        print("Document added with ID: \(ref!.documentID)")
-                        // jump to main page
-                        self.dismiss(animated: true, completion: nil)
-                    }
+            // store user profile image to firebase storage
+            let storageRef = AppDelegate.storage.reference()
+            let uniqueImageName = UUID.init().uuidString
+            let profileImgRef = storageRef.child("profiles/\(uniqueImageName).png")
+            // transfor image into data
+            let localImageData = UIImagePNGRepresentation(self.loginLogo.image!)!
+            profileImgRef.putData(localImageData, metadata: nil, completion: { (metadata, error) in
+                if error != nil {
+                    print("there is a error uploading the user profile image: \(error)")
+                    return
                 }
                 
-            }
-            
+                // successfully uploaded the image
+                // the download url has to be store in firestore for further retrieving
+                let remoteImageUrlStr = metadata?.downloadURL()?.absoluteString
+                // store user info and remote image url str in firestore
+                if let user = user {
+                    print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
+                    
+                    // save user info to firebase firestore
+                    var ref: DocumentReference? = nil
+                    ref = AppDelegate.db.collection("users").addDocument(data:[
+                        "name" : username,
+                        "email":email,
+                        "profileUrl":remoteImageUrlStr!
+                    ]) { err in
+                        if err != nil {
+                            print("Error adding document: \(err)")
+                            // removing (and signing out the current user if there is one) the user added to auth
+                            user.delete(completion: { (error) in
+                                print("Error deleting the ill-registered user: \(error)")
+                            })
+                        } else {
+                            print("Document added with ID: \(ref!.documentID)")
+                            // jump to main page
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    }
+                }
+            })
         }
     }
     

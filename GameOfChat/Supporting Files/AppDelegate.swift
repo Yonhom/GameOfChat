@@ -18,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      * global firestore database
      */
     static var db = Firestore.firestore()
+    
+    /**
+    * global firebase storage
+    */
+    static var storage = Storage.storage()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         

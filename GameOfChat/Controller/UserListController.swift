@@ -36,6 +36,7 @@ class UserListController: UITableViewController {
                     let user = User()
                     user.name = dataDic["name"] as? String
                     user.email = dataDic["email"] as? String
+                    user.profileUrl = dataDic["profileUrl"] as? String
                     self.users.append(user)
                 }
                 
