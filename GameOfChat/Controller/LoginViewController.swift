@@ -57,7 +57,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     // register button
-    let loginOrRegisterBtn: UIButton = {
+    lazy var loginOrRegisterBtn: UIButton = {
         let button = UIButton()
         button.setTitle("注册", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
@@ -67,7 +67,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }()
     
     // login/register segment
-    let loginRegisterSegment: UISegmentedControl = {
+    lazy var loginRegisterSegment: UISegmentedControl = {
         let loginRegisterSegment = UISegmentedControl(items: ["登录", "注册"]);
         loginRegisterSegment.tintColor = UIColor.white
         loginRegisterSegment.selectedSegmentIndex = 1
@@ -77,53 +77,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         return loginRegisterSegment
     }()
-    
-    @objc func loginRegisterSegmentToggled() {
-        print("\(loginRegisterSegment.titleForSegment(at: loginRegisterSegment.selectedSegmentIndex)!) selected!")
-        
-        // button title
-        loginOrRegisterBtn.setTitle(loginRegisterSegment.titleForSegment(at: loginRegisterSegment.selectedSegmentIndex), for: .normal)
-        
-        // dynamic container height
-        let inputContainterHeight = self.loginRegisterSegment.selectedSegmentIndex == 0 ? 100.0 : 150.0
-        self.inputContainerViewHeightConstraint?.constant = CGFloat(inputContainterHeight)
-        
-        // dynamic textfield height
-        if self.loginRegisterSegment.selectedSegmentIndex == 0 {
-            self.nameFieldHeightZeroConstraint?.isActive = true
-            self.nameFieldHeightConstraint?.isActive = false
-            
-            self.emailFieldHeightConstraint?.isActive = false
-            self.emailFieldHeightHalfOfContainerConstraint?.isActive = true
-            
-            self.passwordFieldHeightConstraint?.isActive = false
-            self.passwordFieldHeightHalfOfContainerConstraint?.isActive = true
-        } else {
-            self.nameFieldHeightZeroConstraint?.isActive = false
-            self.nameFieldHeightConstraint?.isActive = true
-            
-            self.emailFieldHeightConstraint?.isActive = true
-            self.emailFieldHeightHalfOfContainerConstraint?.isActive = false
-            
-            self.passwordFieldHeightConstraint?.isActive = true
-            self.passwordFieldHeightHalfOfContainerConstraint?.isActive = false
-        }
-      
-        // animation all the constraints changes
-        UIView.animate(withDuration: 0.1) {
-            self.view.layoutIfNeeded()
-        }
-        
-    }
-    
-    @objc func loginOrRegisterClicked() {
-        if loginRegisterSegment.selectedSegmentIndex == 0 {
-            login()
-        } else {
-            register()
-        }
-        
-    }
     
     func login() {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
@@ -185,9 +138,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     // logo image
-    let loginLogo: UIImageView = {
+    lazy var loginLogo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "login_logo"))
         imageView.contentMode = .scaleAspectFit
+        // in gesture recognizer, to refer to self the property has to be a lazy variable, or the invocation wont work
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pickProfileImage)))
+        imageView.isUserInteractionEnabled = true
+
         return imageView
     }()
 
@@ -226,7 +183,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setupLoginLogo() {
         loginLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginLogo.bottomAnchor.constraint(equalTo: loginRegisterSegment.topAnchor, constant: -60).isActive = true
+        loginLogo.bottomAnchor.constraint(equalTo: loginRegisterSegment.topAnchor, constant: -40).isActive = true
         loginLogo.widthAnchor.constraint(equalToConstant: 150).isActive = true
         loginLogo.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }

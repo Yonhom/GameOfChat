@@ -16,6 +16,7 @@
 		52B566CE2029761600DE34B2 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566CD2029761600DE34B2 /* UIColor+Hex.swift */; };
 		52B566D1202976AC00DE34B2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566D0202976AC00DE34B2 /* Constants.swift */; };
 		52B566D32029A07200DE34B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52B566D22029A07100DE34B2 /* GoogleService-Info.plist */; };
+		52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */; };
 		52D6D996202AFE3900039072 /* UserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D995202AFE3900039072 /* UserListController.swift */; };
 		52D6D999202B074000039072 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D998202B074000039072 /* User.swift */; };
 		CB91A8D743C7BE94DA52999E /* Pods_GameOfChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8F8388F0951E1A7FDA880B6 /* Pods_GameOfChat.framework */; };
@@ -33,6 +34,7 @@
 		52B566CD2029761600DE34B2 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		52B566D0202976AC00DE34B2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		52B566D22029A07100DE34B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewController+Handler.swift"; sourceTree = "<group>"; };
 		52D6D995202AFE3900039072 /* UserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListController.swift; sourceTree = "<group>"; };
 		52D6D998202B074000039072 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6FCBCAC51FCBABCB228F00F7 /* Pods-GameOfChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameOfChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GameOfChat/Pods-GameOfChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				52B566C7202958C500DE34B2 /* LoginViewController.swift */,
 				52B566B6202954AE00DE34B2 /* MessageViewController.swift */,
 				52D6D995202AFE3900039072 /* UserListController.swift */,
+				52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				52D6D996202AFE3900039072 /* UserListController.swift in Sources */,
 				52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */,
 				52D6D999202B074000039072 /* User.swift in Sources */,
+				52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
