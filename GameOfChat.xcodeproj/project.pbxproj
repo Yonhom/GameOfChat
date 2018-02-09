@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520F997B202DA8280086C0AF /* FirebaseUtil.swift */; };
 		52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566B4202954AE00DE34B2 /* AppDelegate.swift */; };
 		52B566B7202954AE00DE34B2 /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566B6202954AE00DE34B2 /* MessageViewController.swift */; };
 		52B566BA202954AE00DE34B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52B566B8202954AE00DE34B2 /* Main.storyboard */; };
@@ -21,10 +22,12 @@
 		52B5C3BD202C64590005D370 /* UIImageView+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */; };
 		52D6D996202AFE3900039072 /* UserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D995202AFE3900039072 /* UserListController.swift */; };
 		52D6D999202B074000039072 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D998202B074000039072 /* User.swift */; };
+		52DC215C202D98FD00F9CF58 /* LoginViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */; };
 		CB91A8D743C7BE94DA52999E /* Pods_GameOfChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8F8388F0951E1A7FDA880B6 /* Pods_GameOfChat.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		520F997B202DA8280086C0AF /* FirebaseUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseUtil.swift; sourceTree = "<group>"; };
 		52B566B1202954AE00DE34B2 /* GameOfChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B566B4202954AE00DE34B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52B566B6202954AE00DE34B2 /* MessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +44,7 @@
 		52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Cache.swift"; sourceTree = "<group>"; };
 		52D6D995202AFE3900039072 /* UserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListController.swift; sourceTree = "<group>"; };
 		52D6D998202B074000039072 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6FCBCAC51FCBABCB228F00F7 /* Pods-GameOfChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameOfChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GameOfChat/Pods-GameOfChat.debug.xcconfig"; sourceTree = "<group>"; };
 		A8F8388F0951E1A7FDA880B6 /* Pods_GameOfChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GameOfChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C56CB47D0A029A5C931F103E /* Pods-GameOfChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GameOfChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-GameOfChat/Pods-GameOfChat.release.xcconfig"; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 		52B566B3202954AE00DE34B2 /* GameOfChat */ = {
 			isa = PBXGroup;
 			children = (
+				52DC215A202D98DA00F9CF58 /* Protocol */,
 				52B5C3B9202C50520005D370 /* VIew */,
 				52D6D997202B071D00039072 /* Model */,
 				52B566CA20296EBE00DE34B2 /* Other */,
@@ -123,6 +128,7 @@
 		52B566CA20296EBE00DE34B2 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				520F997B202DA8280086C0AF /* FirebaseUtil.swift */,
 				52B566CD2029761600DE34B2 /* UIColor+Hex.swift */,
 				52B566D0202976AC00DE34B2 /* Constants.swift */,
 				52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */,
@@ -144,6 +150,14 @@
 				52D6D998202B074000039072 /* User.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		52DC215A202D98DA00F9CF58 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		5871819D07442DB6EFAD6979 /* Pods */ = {
@@ -307,11 +321,13 @@
 				52B566C8202958C500DE34B2 /* LoginViewController.swift in Sources */,
 				52B566CE2029761600DE34B2 /* UIColor+Hex.swift in Sources */,
 				52B566B7202954AE00DE34B2 /* MessageViewController.swift in Sources */,
+				520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */,
 				52D6D996202AFE3900039072 /* UserListController.swift in Sources */,
 				52B5C3BB202C507B0005D370 /* UserCell.swift in Sources */,
 				52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */,
 				52D6D999202B074000039072 /* User.swift in Sources */,
 				52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */,
+				52DC215C202D98FD00F9CF58 /* LoginViewControllerDelegate.swift in Sources */,
 				52B5C3BD202C64590005D370 /* UIImageView+Cache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

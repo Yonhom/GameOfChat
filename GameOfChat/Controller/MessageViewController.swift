@@ -24,7 +24,59 @@ class MessageViewController: UITableViewController {
         // to see if there is a current user. if not jump to login page
         if Auth.auth().currentUser == nil {
             logout()
+            return
         }
+        
+        // add a user profile icon and name to the center of the navigation bar
+        FirebaseUtil.fetchCurrentUserInfoWithCompletionCallBack { (user, error) in
+            if error != nil {
+                return
+            }
+            if let user = user {
+                self.setupNaviBar(with: user)
+            }
+        }
+        
+    }
+    
+    func setupNaviBar(with user: User) {
+        let naviView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        navigationItem.titleView = naviView
+        
+        // set up a resizable container view for custom view, the resizable feature is for autolayout
+        let containerView = UIView()
+        naviView.addSubview(containerView)
+        // make the container view stay in the center of the titleView
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.centerXAnchor.constraint(equalTo: naviView.centerXAnchor).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: naviView.centerYAnchor).isActive = true
+        
+        // add a profile image to the container view
+        let profileImageView = UIImageView()
+        profileImageView.layer.cornerRadius = 15
+        profileImageView.layer.masksToBounds = true
+        if let imageUrl = user.profileUrl {
+            profileImageView.loadCachedImageWithUrl(imageUrlStr: imageUrl)
+        }
+        containerView.addSubview(profileImageView)
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        profileImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        // add user name title to the container view
+        let nameLabel = UILabel()
+        if let name = user.name {
+            nameLabel.text = name
+        }
+        containerView.addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
+        nameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
+        nameLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        nameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
+        
     }
     
     @objc func openComposeMessagePage() {
@@ -42,8 +94,27 @@ class MessageViewController: UITableViewController {
         }
         
         let loginVC = LoginViewController()
+        // set the current controller as the login controller's delegate, so the login controller can send message to the message controller without knowing its existence
+        loginVC.delegate = self
         present(loginVC, animated: true, completion: nil)
     }
 
 }
+
+extension MessageViewController: LoginViewControllerDelegate {
+    func loginViewControllerDidRegisterWithUser(user: User) {
+        setupNaviBar(with: user)
+    }
+    
+    func loginViewControllerDidLoginWithUser(user: User) {
+        setupNaviBar(with: user)
+    }
+    
+    
+    
+    
+}
+
+
+
 

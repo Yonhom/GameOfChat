@@ -11,6 +11,8 @@ import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    weak var delegate: LoginViewControllerDelegate?
+    
     // property initialized with a anonymous closure
     let inputContainerView: UIView = {
         let view = UIView()
@@ -36,6 +38,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let textField = UITextField()
         textField.placeholder = "邮件"
         textField.clearButtonMode = .whileEditing
+        textField.keyboardType = .emailAddress
         return textField
     }()
     let emailTextFieldSeprator: UIView = {
@@ -48,6 +51,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let textField = UITextField()
         textField.placeholder = "密码"
         textField.clearButtonMode = .whileEditing
+        textField.isSecureTextEntry = true
         return textField
     }()
     
@@ -91,7 +95,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             
             // successfully signed in!
-            print("SIgned in with email: \(user?.email)")
+//            print("SIgned in with email: \(user?.email)")
+            // report sign in user info to the login controller's delegate
+            FirebaseUtil.fetchCurrentUserInfoWithCompletionCallBack(completion: { (user, error) in
+                if error != nil {
+                    return
+                }
+                if let user = user {
+                    self.delegate?.loginViewControllerDidLoginWithUser(user: user)
+                }
+            })
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -113,43 +126,57 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             // store user profile image to firebase storage
             let storageRef = AppDelegate.storage.reference()
             let uniqueImageName = UUID.init().uuidString
+            // full sized image ref
             let profileImgRef = storageRef.child("profiles/\(uniqueImageName).png")
+            // compressed profile image ref
+//            let profileImgCompressedRef = storageRef.child("profilesCompressed/\(uniqueImageName).jpg")
             // transfor image into data
-            let localImageData = UIImagePNGRepresentation(self.loginLogo.image!)!
-            profileImgRef.putData(localImageData, metadata: nil, completion: { (metadata, error) in
-                if error != nil {
-                    print("there is a error uploading the user profile image: \(error)")
-                    return
-                }
-                
-                // successfully uploaded the image
-                // the download url has to be store in firestore for further retrieving
-                let remoteImageUrlStr = metadata?.downloadURL()?.absoluteString
-                // store user info and remote image url str in firestore
-                if let user = user {
-                    print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
+            if let image = self.loginLogo.image, let imageCompressed = UIImageJPEGRepresentation(image, 0.1) {
+                profileImgRef.putData(imageCompressed, metadata: nil, completion: { (metadata, error) in
+                    if error != nil {
+                        print("there is a error uploading the user profile image: \(error)")
+                        return
+                    }
                     
-                    // save user info to firebase firestore
-                    var ref: DocumentReference? = nil
-                    ref = AppDelegate.db.collection("users").addDocument(data:[
-                        "name" : username,
-                        "email":email,
-                        "profileUrl":remoteImageUrlStr!
-                    ]) { err in
-                        if err != nil {
-                            print("Error adding document: \(err)")
-                            // removing (and signing out the current user if there is one) the user added to auth
-                            user.delete(completion: { (error) in
-                                print("Error deleting the ill-registered user: \(error)")
-                            })
-                        } else {
-                            print("Document added with ID: \(ref!.documentID)")
-                            // jump to main page
-                            self.dismiss(animated: true, completion: nil)
+                    // successfully uploaded the image
+                    // the download url has to be store in firestore for further retrieving
+                    let remoteImageUrlStr = metadata?.downloadURL()?.absoluteString
+                    // store user info and remote image url str in firestore
+                    if let user = user {
+                        print("This is the user info after the user is successfully registered or logged in: uid=\(user.uid), email=\(user.email!)")
+                        
+                        // save user info to firebase firestore, each user in the user collection is associated with a authtification id
+                        // so that we can retrieve info about the current user that is logged in
+                        AppDelegate.db.collection("users").document(user.uid).setData([
+                            "name" : username,
+                            "email":email,
+                            "profileUrl":remoteImageUrlStr!
+                        ]) { err in
+                            if err != nil {
+                                print("Error adding document: \(err)")
+                                // removing (and signing out the current user if there is one) the user added to auth
+                                user.delete(completion: { (error) in
+                                    print("Error deleting the ill-registered user: \(error)")
+                                })
+                            } else {
+                                FirebaseUtil.fetchCurrentUserInfoWithCompletionCallBack(completion: { (user, error) in
+                                    if error != nil {
+                                        return
+                                    }
+                                    if let user = user {
+                                        self.delegate?.loginViewControllerDidRegisterWithUser(user: user)
+                                    }
+                                    
+                                })
+                                
+                                // jump to main page
+                                self.dismiss(animated: true, completion: nil)
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
+            
         }
     }
     
@@ -163,7 +190,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         return imageView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = LOGIN_BG_COLOR
