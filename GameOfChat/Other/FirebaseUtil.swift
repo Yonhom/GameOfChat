@@ -26,6 +26,7 @@ class FirebaseUtil {
                     tempUser.email = dataDic["email"] as? String
                     tempUser.profileUrl = dataDic["profileUrl"] as? String
                     completion(tempUser, nil)
+                    return
                 }
                 completion(nil, nil)
             }

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520F997B202DA8280086C0AF /* FirebaseUtil.swift */; };
+		525346DE203169BB008553D8 /* ChatLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525346DD203169BB008553D8 /* ChatLogViewController.swift */; };
+		525346E020317AF3008553D8 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525346DF20317AF3008553D8 /* TitleView.swift */; };
 		52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566B4202954AE00DE34B2 /* AppDelegate.swift */; };
 		52B566B7202954AE00DE34B2 /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566B6202954AE00DE34B2 /* MessageViewController.swift */; };
 		52B566BA202954AE00DE34B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52B566B8202954AE00DE34B2 /* Main.storyboard */; };
@@ -28,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		520F997B202DA8280086C0AF /* FirebaseUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseUtil.swift; sourceTree = "<group>"; };
+		525346DD203169BB008553D8 /* ChatLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogViewController.swift; sourceTree = "<group>"; };
+		525346DF20317AF3008553D8 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		52B566B1202954AE00DE34B2 /* GameOfChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B566B4202954AE00DE34B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52B566B6202954AE00DE34B2 /* MessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 				52B566B6202954AE00DE34B2 /* MessageViewController.swift */,
 				52D6D995202AFE3900039072 /* UserListController.swift */,
 				52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */,
+				525346DD203169BB008553D8 /* ChatLogViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				52B5C3BA202C507B0005D370 /* UserCell.swift */,
+				525346DF20317AF3008553D8 /* TitleView.swift */,
 			);
 			path = VIew;
 			sourceTree = "<group>";
@@ -320,8 +326,10 @@
 				52B566D1202976AC00DE34B2 /* Constants.swift in Sources */,
 				52B566C8202958C500DE34B2 /* LoginViewController.swift in Sources */,
 				52B566CE2029761600DE34B2 /* UIColor+Hex.swift in Sources */,
+				525346E020317AF3008553D8 /* TitleView.swift in Sources */,
 				52B566B7202954AE00DE34B2 /* MessageViewController.swift in Sources */,
 				520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */,
+				525346DE203169BB008553D8 /* ChatLogViewController.swift in Sources */,
 				52D6D996202AFE3900039072 /* UserListController.swift in Sources */,
 				52B5C3BB202C507B0005D370 /* UserCell.swift in Sources */,
 				52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */,

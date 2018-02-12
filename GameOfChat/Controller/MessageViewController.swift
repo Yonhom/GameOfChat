@@ -40,16 +40,14 @@ class MessageViewController: UITableViewController {
     }
     
     func setupNaviBar(with user: User) {
-        let naviView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        navigationItem.titleView = naviView
+        // this title view  size info will be reset,so has to create a custom view to size its size to be as big as possible if that occurred
+        let titleView = TitleView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+        navigationItem.titleView = titleView
         
         // set up a resizable container view for custom view, the resizable feature is for autolayout
         let containerView = UIView()
-        naviView.addSubview(containerView)
-        // make the container view stay in the center of the titleView
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.centerXAnchor.constraint(equalTo: naviView.centerXAnchor).isActive = true
-        containerView.centerYAnchor.constraint(equalTo: naviView.centerYAnchor).isActive = true
+        titleView.addSubview(containerView)
         
         // add a profile image to the container view
         let profileImageView = UIImageView()
@@ -59,6 +57,7 @@ class MessageViewController: UITableViewController {
             profileImageView.loadCachedImageWithUrl(imageUrlStr: imageUrl)
         }
         containerView.addSubview(profileImageView)
+        // profile image constraints
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         profileImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
@@ -77,6 +76,21 @@ class MessageViewController: UITableViewController {
         nameLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor).isActive = true
         
+        // make the container view stay in the center of the titleView
+        containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        containerView.leftAnchor.constraint(equalTo: profileImageView.leftAnchor).isActive = true
+        containerView.rightAnchor.constraint(equalTo: nameLabel.rightAnchor).isActive = true
+        containerView.heightAnchor.constraint(equalTo: titleView.heightAnchor).isActive = true
+        
+        // make the naviView responsive to touch
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(naviTitleTapped)))
+    }
+    
+    @objc func naviTitleTapped() {
+        print("navi title tapped!!!")
+        let chatLogController = ChatLogViewController()
+        navigationController?.pushViewController(chatLogController, animated: true)
     }
     
     @objc func openComposeMessagePage() {
