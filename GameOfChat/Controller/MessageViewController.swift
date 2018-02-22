@@ -14,6 +14,9 @@ class MessageViewController: UITableViewController {
     var cellId = "cellId"
     
     var messages = [Message]()
+    
+    // MARK: - message dictionary with unique user id
+    var messageDic = [String:Message]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +48,7 @@ class MessageViewController: UITableViewController {
         fetchChatLog()
         
         // register reusable table view cell
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(ImageTitleDetailCell.self, forCellReuseIdentifier: cellId)
     }
     
     func fetchChatLog() {
@@ -54,18 +57,22 @@ class MessageViewController: UITableViewController {
             if let error = error {
                 print("Error fetching messages: \(error)")
             } else  {
-                // clear old message cache, cause this block will be called every time the 'message' collection in the db is changed
-                self.messages.removeAll()
                 
                 for document in queryShot!.documents {
                     let dataDic = document.data()
                     let msg = Message()
                     msg.fromUser = dataDic["fromUser"] as? String
                     msg.toUser = dataDic["toUser"] as? String
-                    msg.timeStamp = dataDic["timeStamp"] as? Double
+                    msg.timeStamp = dataDic["timeStamp"] as? NSNumber
                     msg.message = dataDic["message"] as? String
                     
-                    self.messages.append(msg)
+                    // messages with unique user id
+                    self.messageDic[msg.toUser!] = msg
+                    // add the filter messages to messages array
+                    self.messages = Array(self.messageDic.values)
+                    self.messages.sort(by: { (message1, message2) -> Bool in
+                        return message1.timeStamp!.intValue > message2.timeStamp!.intValue
+                    })
                 }
                 
                 self.tableView.reloadData()
@@ -149,15 +156,21 @@ class MessageViewController: UITableViewController {
         present(loginVC, animated: true, completion: nil)
     }
     
-    
+    // MARK: - table view delegate & data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        cell.textLabel?.text = messages[indexPath.row].message
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ImageTitleDetailCell
+        // set the message to show in the cell
+        cell.message = messages[indexPath.row]
+        
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 
 }

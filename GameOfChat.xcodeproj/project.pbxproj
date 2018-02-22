@@ -20,7 +20,7 @@
 		52B566D1202976AC00DE34B2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B566D0202976AC00DE34B2 /* Constants.swift */; };
 		52B566D32029A07200DE34B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52B566D22029A07100DE34B2 /* GoogleService-Info.plist */; };
 		52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */; };
-		52B5C3BB202C507B0005D370 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BA202C507B0005D370 /* UserCell.swift */; };
+		52B5C3BB202C507B0005D370 /* ImageTitleDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BA202C507B0005D370 /* ImageTitleDetailCell.swift */; };
 		52B5C3BD202C64590005D370 /* UIImageView+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */; };
 		52CBAE0B203E657400211A5E /* UserListViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CBAE0A203E657400211A5E /* UserListViewControllerDelegate.swift */; };
 		52CBAE0D203E77E300211A5E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CBAE0C203E77E300211A5E /* Message.swift */; };
@@ -46,7 +46,7 @@
 		52B566D0202976AC00DE34B2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		52B566D22029A07100DE34B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewController+Handler.swift"; sourceTree = "<group>"; };
-		52B5C3BA202C507B0005D370 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		52B5C3BA202C507B0005D370 /* ImageTitleDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTitleDetailCell.swift; sourceTree = "<group>"; };
 		52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Cache.swift"; sourceTree = "<group>"; };
 		52CBAE0A203E657400211A5E /* UserListViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewControllerDelegate.swift; sourceTree = "<group>"; };
 		52CBAE0C203E77E300211A5E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 		52B5C3B9202C50520005D370 /* VIew */ = {
 			isa = PBXGroup;
 			children = (
-				52B5C3BA202C507B0005D370 /* UserCell.swift */,
+				52B5C3BA202C507B0005D370 /* ImageTitleDetailCell.swift */,
 				525346DF20317AF3008553D8 /* TitleView.swift */,
 			);
 			path = VIew;
@@ -338,7 +338,7 @@
 				520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */,
 				525346DE203169BB008553D8 /* ChatLogViewController.swift in Sources */,
 				52D6D996202AFE3900039072 /* UserListController.swift in Sources */,
-				52B5C3BB202C507B0005D370 /* UserCell.swift in Sources */,
+				52B5C3BB202C507B0005D370 /* ImageTitleDetailCell.swift in Sources */,
 				52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */,
 				52D6D999202B074000039072 /* User.swift in Sources */,
 				52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */,
