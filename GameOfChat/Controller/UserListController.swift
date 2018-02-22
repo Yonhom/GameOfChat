@@ -13,6 +13,8 @@ class UserListController: UITableViewController {
     var users = [User]()
     
     let cellId = "cellId"
+    
+    weak var delegate: UserListViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +42,7 @@ class UserListController: UITableViewController {
                     user.name = dataDic["name"] as? String
                     user.email = dataDic["email"] as? String
                     user.profileUrl = dataDic["profileUrl"] as? String
+                    user.id = document.documentID  // the user id 
                     self.users.append(user)
                 }
                 
@@ -77,6 +80,14 @@ class UserListController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true) {
+            // push the chat log view controller to navigation stack
+            // delegate?.pushViewControllerWithUser...
+            self.delegate?.didSelectUser(user: self.users[indexPath.row])
+        }
     }
 
 }

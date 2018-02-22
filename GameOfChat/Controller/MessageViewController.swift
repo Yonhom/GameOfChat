@@ -10,6 +10,10 @@ import UIKit
 import Firebase
 
 class MessageViewController: UITableViewController {
+    
+    var cellId = "cellId"
+    
+    var messages = [Message]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +23,7 @@ class MessageViewController: UITableViewController {
         
         // add a 'fire up a chat' icon item
         let composeImage = UIImage(named: "new_message_icon")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: composeImage, style: .plain, target: self, action: #selector(openComposeMessagePage))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: composeImage, style: .plain, target: self, action: #selector(presentUserList))
         
         // to see if there is a current user. if not jump to login page
         if Auth.auth().currentUser == nil {
@@ -37,6 +41,32 @@ class MessageViewController: UITableViewController {
             }
         }
         
+        // fatch chat log
+        fetchChatLog()
+        
+        // register reusable table view cell
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+    }
+    
+    func fetchChatLog() {
+        AppDelegate.db.collection("messages").getDocuments { (queryShot, error) in
+            if let error = error {
+                print("Error fetching messages: \(error)")
+            } else  {
+                for document in queryShot!.documents {
+                    let dataDic = document.data()
+                    let msg = Message()
+                    msg.fromUser = dataDic["fromUser"] as? String
+                    msg.toUser = dataDic["toUser"] as? String
+                    msg.timeStamp = dataDic["timeStamp"] as? Double
+                    msg.message = dataDic["message"] as? String
+                    
+                    self.messages.append(msg)
+                }
+                
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func setupNaviBar(with user: User) {
@@ -84,17 +114,19 @@ class MessageViewController: UITableViewController {
         containerView.heightAnchor.constraint(equalTo: titleView.heightAnchor).isActive = true
         
         // make the naviView responsive to touch
-        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(naviTitleTapped)))
+//        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatLog)))
     }
     
-    @objc func naviTitleTapped() {
-        print("navi title tapped!!!")
+    @objc func showChatLogWithUser(user: User) {
         let chatLogController = ChatLogViewController()
+        chatLogController.withUser = user
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
-    @objc func openComposeMessagePage() {
-        let composeNavi = UINavigationController(rootViewController: UserListController())
+    @objc func presentUserList() {
+        let userListController = UserListController()
+        userListController.delegate = self
+        let composeNavi = UINavigationController(rootViewController: userListController)
         present(composeNavi, animated: true, completion: nil)
     }
     
@@ -112,9 +144,20 @@ class MessageViewController: UITableViewController {
         loginVC.delegate = self
         present(loginVC, animated: true, completion: nil)
     }
+    
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        cell.textLabel?.text = messages[indexPath.row].message
+        return cell
+    }
 
 }
-
+// MARK: - things done for login view controller
 extension MessageViewController: LoginViewControllerDelegate {
     func loginViewControllerDidRegisterWithUser(user: User) {
         setupNaviBar(with: user)
@@ -124,7 +167,14 @@ extension MessageViewController: LoginViewControllerDelegate {
         setupNaviBar(with: user)
     }
     
-    
+}
+
+// MARK: - things done for chat list view controller
+extension MessageViewController: UserListViewControllerDelegate {
+    func didSelectUser(user: User) {
+        // here a user from user list controller is tapped, we push a chat log controller for the user
+        showChatLogWithUser(user: user)
+    }
     
     
 }

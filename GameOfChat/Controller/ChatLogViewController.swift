@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import Firebase
 
 class ChatLogViewController: UIViewController {
+    
+    /**
+    * the info of the user with which the current user have engaged conversation
+    */
+    var withUser: User?
     
     lazy var messageField: UITextField = {
         let textField = UITextField()
@@ -22,6 +28,9 @@ class ChatLogViewController: UIViewController {
         setupTableView()
         // add the message box
         setupMessageBox()
+        
+        // set up the navigation bar title with the name of user with which the current user have engaged conversion
+        title = withUser?.name
         
     }
 
@@ -83,8 +92,11 @@ class ChatLogViewController: UIViewController {
         // get the message in the message field and send it
         if let message = messageField.text, message != "" {
             let values = [
-                "message" : message
-            ]
+                "message" : message,
+                "toUser" : withUser!.id!,
+                "fromUser" : Auth.auth().currentUser!.uid,
+                "timeStamp" : NSDate().timeIntervalSince1970
+                ] as [String : Any]
             AppDelegate.db.collection("messages").addDocument(data: values, completion: { (error) in
                 if let error = error {
                     print("Error sending message: \(error)")

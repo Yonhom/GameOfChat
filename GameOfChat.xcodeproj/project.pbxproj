@@ -22,6 +22,8 @@
 		52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */; };
 		52B5C3BB202C507B0005D370 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BA202C507B0005D370 /* UserCell.swift */; };
 		52B5C3BD202C64590005D370 /* UIImageView+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */; };
+		52CBAE0B203E657400211A5E /* UserListViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CBAE0A203E657400211A5E /* UserListViewControllerDelegate.swift */; };
+		52CBAE0D203E77E300211A5E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CBAE0C203E77E300211A5E /* Message.swift */; };
 		52D6D996202AFE3900039072 /* UserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D995202AFE3900039072 /* UserListController.swift */; };
 		52D6D999202B074000039072 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D998202B074000039072 /* User.swift */; };
 		52DC215C202D98FD00F9CF58 /* LoginViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */; };
@@ -46,6 +48,8 @@
 		52B5C3B7202C240F0005D370 /* LoginViewController+Handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewController+Handler.swift"; sourceTree = "<group>"; };
 		52B5C3BA202C507B0005D370 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		52B5C3BC202C64590005D370 /* UIImageView+Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Cache.swift"; sourceTree = "<group>"; };
+		52CBAE0A203E657400211A5E /* UserListViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewControllerDelegate.swift; sourceTree = "<group>"; };
+		52CBAE0C203E77E300211A5E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		52D6D995202AFE3900039072 /* UserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListController.swift; sourceTree = "<group>"; };
 		52D6D998202B074000039072 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -154,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				52D6D998202B074000039072 /* User.swift */,
+				52CBAE0C203E77E300211A5E /* Message.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				52DC215B202D98FD00F9CF58 /* LoginViewControllerDelegate.swift */,
+				52CBAE0A203E657400211A5E /* UserListViewControllerDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -326,6 +332,7 @@
 				52B566D1202976AC00DE34B2 /* Constants.swift in Sources */,
 				52B566C8202958C500DE34B2 /* LoginViewController.swift in Sources */,
 				52B566CE2029761600DE34B2 /* UIColor+Hex.swift in Sources */,
+				52CBAE0B203E657400211A5E /* UserListViewControllerDelegate.swift in Sources */,
 				525346E020317AF3008553D8 /* TitleView.swift in Sources */,
 				52B566B7202954AE00DE34B2 /* MessageViewController.swift in Sources */,
 				520F997C202DA8280086C0AF /* FirebaseUtil.swift in Sources */,
@@ -335,6 +342,7 @@
 				52B566B5202954AE00DE34B2 /* AppDelegate.swift in Sources */,
 				52D6D999202B074000039072 /* User.swift in Sources */,
 				52B5C3B8202C240F0005D370 /* LoginViewController+Handler.swift in Sources */,
+				52CBAE0D203E77E300211A5E /* Message.swift in Sources */,
 				52DC215C202D98FD00F9CF58 /* LoginViewControllerDelegate.swift in Sources */,
 				52B5C3BD202C64590005D370 /* UIImageView+Cache.swift in Sources */,
 			);
