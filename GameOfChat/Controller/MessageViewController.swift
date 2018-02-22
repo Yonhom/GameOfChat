@@ -49,10 +49,14 @@ class MessageViewController: UITableViewController {
     }
     
     func fetchChatLog() {
-        AppDelegate.db.collection("messages").getDocuments { (queryShot, error) in
+        AppDelegate.db.collection("messages").addSnapshotListener { (queryShot, error) in
+            
             if let error = error {
                 print("Error fetching messages: \(error)")
             } else  {
+                // clear old message cache, cause this block will be called every time the 'message' collection in the db is changed
+                self.messages.removeAll()
+                
                 for document in queryShot!.documents {
                     let dataDic = document.data()
                     let msg = Message()

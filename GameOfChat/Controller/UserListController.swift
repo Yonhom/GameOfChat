@@ -30,10 +30,13 @@ class UserListController: UITableViewController {
     
     func fetchUser() {
         // asynchronously retrieve all documents
-        AppDelegate.db.collection("users").getDocuments { (querySnap, error) in
+        AppDelegate.db.collection("users").addSnapshotListener { (querySnap, error) in
             if let error = error {
                 print("Error fetching user documents: \(error)")
             } else {
+                // remove old cached user data before refreshing
+                self.users.removeAll()
+                
                 for document in querySnap!.documents {
                     // the document data is a dictionary storing user info
                     let dataDic = document.data()
