@@ -91,18 +91,31 @@ class ChatLogViewController: UIViewController {
     @objc func sendTapped() {
         // get the message in the message field and send it
         if let message = messageField.text, message != "" {
+            
+            // the message to send
+            let fromId = Auth.auth().currentUser!.uid
+            let toId = withUser!.id!
             let values = [
                 "message" : message,
-                "toUser" : withUser!.id!,
-                "fromUser" : Auth.auth().currentUser!.uid,
+                "toUser" : toId,
+                "fromUser" : fromId,
                 "timeStamp" : NSDate().timeIntervalSince1970
                 ] as [String : Any]
-            AppDelegate.db.collection("messages").addDocument(data: values, completion: { (error) in
+            
+            var messageDocRef: DocumentReference?
+            messageDocRef = AppDelegate.db.collection("messages").addDocument(data: values, completion: { (error) in
                 if let error = error {
                     print("Error sending message: \(error)")
                     return
                 }
-                // message sent successfully!!! we may retrieve it and show it in the chat window
+                
+                // add a user-messages nodes for tracking the message the current user care about
+                // the message's id that the current user care about
+                let messageId = messageDocRef!.documentID
+                // add a new node under 'user-messages/curUid' for the reference to the message the current user just send
+                AppDelegate.db.collection("user-messages").document(fromId).setData([messageId:1], options: SetOptions.merge()) // 'merge' will not overwrite the message with the same messageId
+                // also add and associate receipient's id with the messageId, so when the receipient is logged in, even tho it may not have sent any message, it can still get the message sent to itself
+                AppDelegate.db.collection("user-messages").document(toId).setData([messageId:1], options: SetOptions.merge())
             })
             
         } else {

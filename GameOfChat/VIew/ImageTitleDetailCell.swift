@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ImageTitleDetailCell: UITableViewCell {
     
@@ -50,23 +51,33 @@ class ImageTitleDetailCell: UITableViewCell {
             // the message label
             detailTextLabel?.text = self.message?.message
             
-            if let toUserId = self.message?.toUser {
-                AppDelegate.db.collection("users").document(toUserId).getDocument(completion: { (snapshot, error) in
-                    if let error = error {
-                        print("Error occurred fetching the 'toUser' info: \(error)")
-                    } else {
-                        let dataDic = snapshot!.data()
-                        if let dataDic = dataDic {
-                            // set the 'toUser' image
-                            self.profileImageView.loadCachedImageWithUrl(imageUrlStr: dataDic["profileUrl"] as! String)
-                            
-                            // set the 'toUser' name label
-                            self.textLabel?.text = dataDic["name"] as? String
-                            
-                        }
+            setMessageIconAndName()
+        }
+    }
+    
+    fileprivate func setMessageIconAndName() {
+        // if the toUser is the current user, set the image and name to fromUser's
+        var finalUserId: String?
+        if let currentUid = Auth.auth().currentUser?.uid, let toUserId = self.message?.toUser, let fromUserId = self.message?.fromUser {
+            finalUserId = currentUid == toUserId ? fromUserId : toUserId
+        }
+        
+        if let toUserId = finalUserId {
+            AppDelegate.db.collection("users").document(toUserId).getDocument(completion: { (snapshot, error) in
+                if let error = error {
+                    print("Error occurred fetching the 'toUser' info: \(error)")
+                } else {
+                    let dataDic = snapshot!.data()
+                    if let dataDic = dataDic {
+                        // set the 'toUser' image
+                        self.profileImageView.loadCachedImageWithUrl(imageUrlStr: dataDic["profileUrl"] as! String)
+                        
+                        // set the 'toUser' name label
+                        self.textLabel?.text = dataDic["name"] as? String
+                        
                     }
-                })
-            }
+                }
+            })
         }
     }
 

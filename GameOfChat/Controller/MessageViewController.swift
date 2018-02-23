@@ -45,12 +45,58 @@ class MessageViewController: UITableViewController {
         }
         
         // fatch chat log
-        fetchChatLog()
+//        fetchChatLog()
+        fetchChatLogForCurrentUser()
         
         // register reusable table view cell
         tableView.register(ImageTitleDetailCell.self, forCellReuseIdentifier: cellId)
     }
     
+    func fetchChatLogForCurrentUser() {
+        if let currentUid = Auth.auth().currentUser?.uid {
+            AppDelegate.db.collection("user-messages").document(currentUid).addSnapshotListener { (snapshot, error) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                // when the new user has not sent or received any messages, the userMesData for that uid is nil, in this case, bail out
+                if let userMesData = snapshot!.data() {
+                    let messageIds = userMesData.keys
+                    for messageId in messageIds {
+                        print("message id related to current user: \(messageId)")
+                        // use those message id related to the current user to fetch conversations
+                        AppDelegate.db.collection("messages").document(messageId).addSnapshotListener({ (snapshot, error) in
+                            
+                            if let error = error {
+                                print("Error fetching messages: \(error)")
+                            } else  {
+                                
+                                let dataDic = snapshot!.data()!
+                                let msg = Message()
+                                msg.fromUser = dataDic["fromUser"] as? String
+                                msg.toUser = dataDic["toUser"] as? String
+                                msg.timeStamp = dataDic["timeStamp"] as? NSNumber
+                                msg.message = dataDic["message"] as? String
+                                // messages with unique user id
+                                self.messageDic[msg.toUser!] = msg
+                                // add the filter messages to messages array
+                                self.messages = Array(self.messageDic.values)
+                                self.messages.sort(by: { (message1, message2) -> Bool in
+                                    return message1.timeStamp!.intValue > message2.timeStamp!.intValue
+                                })
+                                
+                                self.tableView.reloadData()
+                            }
+                            
+                        })
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    @available(*, deprecated: 1.0, message: "Already unavailable, use fetchChatLogForCurrentUser() instead!")
     func fetchChatLog() {
         AppDelegate.db.collection("messages").addSnapshotListener { (queryShot, error) in
             
@@ -147,8 +193,16 @@ class MessageViewController: UITableViewController {
                 try Auth.auth().signOut()
             } catch let error {
                 print("There is a error logging out: \(error)")
+                return
             }
         }
+        
+        // clear cache data in messages & messageDic
+        self.messages.removeAll()
+        self.messageDic.removeAll()
+        
+        // refresh the table view
+        tableView.reloadData()
         
         let loginVC = LoginViewController()
         // set the current controller as the login controller's delegate, so the login controller can send message to the message controller without knowing its existence
@@ -178,10 +232,12 @@ class MessageViewController: UITableViewController {
 extension MessageViewController: LoginViewControllerDelegate {
     func loginViewControllerDidRegisterWithUser(user: User) {
         setupNaviBar(with: user)
+        fetchChatLogForCurrentUser()  // every time a user logged fetch the message for that user
     }
     
     func loginViewControllerDidLoginWithUser(user: User) {
         setupNaviBar(with: user)
+        fetchChatLogForCurrentUser()
     }
     
 }
