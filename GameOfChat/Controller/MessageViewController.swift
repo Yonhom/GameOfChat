@@ -87,13 +87,11 @@ class MessageViewController: UITableViewController {
                                 
                                 self.tableView.reloadData()
                             }
-                            
                         })
                     }
                 }
             }
         }
-        
     }
     
     @available(*, deprecated: 1.0, message: "Already unavailable, use fetchChatLogForCurrentUser() instead!")
@@ -226,9 +224,37 @@ class MessageViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        
+        guard let toId = message.toUser, let currentId = Auth.auth().currentUser?.uid else { return }
+        
+        // if to id is the current user, then get the fromId
+        let finalId = currentId == toId ? message.fromUser! : toId
+       
+        // find the user that the current user talk to
+        AppDelegate.db.collection("users").document(finalId).getDocument { (snapshot, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            let userData = snapshot!.data()!
+            let user = User()
+            user.name = userData["name"] as? String
+            user.id = finalId
+            user.email = userData["email"] as? String
+            user.profileUrl = userData["profileUrl"] as? String
+            
+            // the user whose chat log to show
+            self.showChatLogWithUser(user: user)
+        }
+        
+    }
 
 }
-// MARK: - things done for login view controller
+// MARK: - delegate methods for login view controller
 extension MessageViewController: LoginViewControllerDelegate {
     func loginViewControllerDidRegisterWithUser(user: User) {
         setupNaviBar(with: user)
@@ -242,7 +268,7 @@ extension MessageViewController: LoginViewControllerDelegate {
     
 }
 
-// MARK: - things done for chat list view controller
+// MARK: - delegate methods for chat list view controller
 extension MessageViewController: UserListViewControllerDelegate {
     func didSelectUser(user: User) {
         // here a user from user list controller is tapped, we push a chat log controller for the user

@@ -13,8 +13,12 @@ class ChatLogViewController: UIViewController {
     
     /**
     * the info of the user with which the current user have engaged conversation
+    * the user the current user is talking to
     */
     var withUser: User?
+    var withUserMessages = [Message]()
+    
+    let cellId = "cellId"
     
     lazy var messageField: UITextField = {
         let textField = UITextField()
@@ -24,18 +28,67 @@ class ChatLogViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // add a table view to the root view
         setupTableView()
+        // register cell
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        
         // add the message box
         setupMessageBox()
         
         // set up the navigation bar title with the name of user with which the current user have engaged conversion
         title = withUser?.name
         
+        // get all the messages the withUser is related to
+        fetchMessagesRelatedToWithUser()
+        
     }
+    
+    func fetchMessagesRelatedToWithUser() {
+        if withUser == nil {
+            print("withUser cannnot be nil!")
+            return
+        }
+        AppDelegate.db.collection("user-messages").document(withUser!.id!).addSnapshotListener { (docShot, error) in
+            if error != nil {
+                print("error fetching user-messages: \(error)")
+                return
+            }
+            
+            let userMesData = docShot!.data()
+            guard let messageIds = userMesData?.keys else { return }
+            for messageId in messageIds {
+                // get the message with all the message id
+                AppDelegate.db.collection("messages").document(messageId).getDocument(completion: { (docShot, error) in
+                    if error != nil {
+                        print("error fetching withUser related messages: \(error)")
+                        return
+                    }
+                    
+                    let withUserMesData = docShot!.data()!
+                    let message = Message()
+                    message.fromUser = withUserMesData["fromUser"] as? String
+                    message.toUser = withUserMesData["toUser"] as? String
+                    message.timeStamp = withUserMesData["timeStamp"] as? NSNumber
+                    message.message = withUserMesData["message"] as? String
+                    
+                    // if the current user id is in either the fromUser or the toUser, append the message to user messages
+                    guard let currentId = Auth.auth().currentUser?.uid else{ return }
+                    if (currentId == message.fromUser! || currentId == message.toUser!) {
+                        self.withUserMessages.append(message)
+                    }
+                    
+                    self.tableView.reloadData()
+                })
+            }
+        }
+    }
+    
+    var tableView: UITableView!
 
     fileprivate func setupTableView() {
-        let tableView = UITableView()
+        tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -127,11 +180,14 @@ class ChatLogViewController: UIViewController {
 
 extension ChatLogViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return withUserMessages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        cell.backgroundColor = .red
+        cell.textLabel?.text = withUserMessages[indexPath.row].message
+        return cell
     }
 
 }

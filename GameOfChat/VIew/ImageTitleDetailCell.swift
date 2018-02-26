@@ -11,8 +11,12 @@ import Firebase
 
 class ImageTitleDetailCell: UITableViewCell {
     
+    static let profileImageWidth: CGFloat = 44
+    
     var profileImageView: UIImageView = {
         let imageView = UIImageView(image: nil)
+        imageView.layer.cornerRadius = profileImageWidth / 2.0
+        imageView.layer.masksToBounds = true
         return imageView
     }()
     
@@ -98,8 +102,8 @@ class ImageTitleDetailCell: UITableViewCell {
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 12).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: ImageTitleDetailCell.profileImageWidth).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: ImageTitleDetailCell.profileImageWidth).isActive = true
     }
     
     func layoutDateLabel() {
